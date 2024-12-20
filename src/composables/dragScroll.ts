@@ -31,7 +31,6 @@ export const useDragScroll = (element: HTMLElement) => {
 
   const startDrag = (event: MouseEvent) => {
     isMomentum.value = false;
-    if (event.button !== 2) return;
     isDragging.value = true;
     lastPosition = new Vector2(event.clientX, event.clientY);
     velocity = new Vector2(0, 0);

@@ -46,6 +46,7 @@
     caret-color: transparent;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    overflow-y: hidden;
 
     &::-webkit-scrollbar {
       display: none;
