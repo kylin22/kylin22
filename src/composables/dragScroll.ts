@@ -1,5 +1,6 @@
 import { ref, onUnmounted } from "vue";
 import { Vector2 } from "three";
+import { clamp } from "three/src/math/MathUtils.js";
  
 export const useDragScroll = (element: HTMLElement) => {
   const scrollRef = ref(element);
@@ -11,18 +12,27 @@ export const useDragScroll = (element: HTMLElement) => {
   const MOMENTUM_REMOVE_RANGE = 0.01;
   const MOMENTUM_TIMESTEP = 16;
   const MOMENTUM_APPLY_MARGIN = 50;
-  let startPosition = new Vector2(0, 0);
   let lastPosition = new Vector2(0, 0);
+  let newPosition = new Vector2(0, 0);
   let velocity = new Vector2(0, 0);
   let lastTime = 0;
   let momentumInterval: NodeJS.Timeout | null = null;
   let momentumBuffer: NodeJS.Timeout | null = null;
+  const elementDimensions = new Vector2(element.offsetWidth / 2, element.offsetHeight / 2);
+  console.log(elementDimensions);
+  
+  const updatePosition = (incrementX: number, incrementY: number) => {
+    newPosition.x += incrementX;
+    newPosition.y += incrementY;
+    newPosition.x = clamp(newPosition.x, 0, elementDimensions.x);
+    newPosition.y = clamp(newPosition.y, 0, elementDimensions.y);
+    element.style.transform = `translate(${-newPosition.x}px, ${-newPosition.y}px)`;
+  }
 
   const startDrag = (event: MouseEvent) => {
     isMomentum.value = false;
     if (event.button !== 2) return;
     isDragging.value = true;
-    startPosition = new Vector2(event.clientX, event.clientY);
     lastPosition = new Vector2(event.clientX, event.clientY);
     velocity = new Vector2(0, 0);
     lastTime = event.timeStamp;
@@ -38,10 +48,8 @@ export const useDragScroll = (element: HTMLElement) => {
 
     const difference = new Vector2().copy(lastPosition).sub(currentPosition);
     const dt = event.timeStamp - lastTime;
-    if (difference.length() > 0) {
-      window.scrollBy({ left: difference.x, top: difference.y, behavior: "auto" });
-    }
-
+    updatePosition(difference.x, difference.y);
+    
     lastTime = event.timeStamp;
     lastPosition = new Vector2().copy(currentPosition);
 
@@ -80,13 +88,7 @@ export const useDragScroll = (element: HTMLElement) => {
     }
     
     velocity.multiplyScalar(FRICTION);
-    console.log(velocity.length());
-
-    window.scrollBy({
-      left: velocity.x * MOMENTUM_TIMESTEP,
-      top: velocity.y * MOMENTUM_TIMESTEP,
-      behavior: "smooth"
-    });
+    updatePosition(velocity.x * MOMENTUM_TIMESTEP, velocity.y * MOMENTUM_TIMESTEP);
 
     if (velocity.length() < MOMENTUM_REMOVE_RANGE) {
       isMomentum.value = false;
