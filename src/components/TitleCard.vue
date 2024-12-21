@@ -1,22 +1,37 @@
 <template>
-  <div id="title">
-    k y l i n
+  <div ref="titleContainer">
+    <slot></slot>
   </div>
 </template>
 
 <script lang="ts" setup>
+  import anime from "animejs";
+  const titleContainer = ref<HTMLDivElement | null>(null);
 
+  onMounted(() => {
+    if (titleContainer.value) {
+      const svgElement = titleContainer.value.querySelector("g");
+      if (svgElement) {
+        const paths = svgElement.querySelectorAll("path");
+        paths.forEach(path => {
+          const length = path.getTotalLength();
+          path.style.strokeDasharray = `${length}`;
+          path.style.strokeDashoffset = `${length}`;
+          anime({
+            targets: path,
+            strokeDashoffset: [length, 0],
+            duration: 5000,
+            easing: "easeInOutQuad",
+            delay: 1000,
+            direction: "alternate",
+            loop: false
+          });
+        });
+      }
+    }
+  });
 </script>
 
-<style>
-  #title {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2em;
-    color: white;
-    z-index: 10;
-    pointer-events: none;
-  }
+<style lang="scss" scoped>
+
 </style>

@@ -4,8 +4,8 @@
 
 <script lang="ts" setup>
   import { onMounted } from "vue";
-  import gsap from "gsap";
-import { randFloat } from "three/src/math/MathUtils.js";
+  import anime from "animejs";
+  import { randFloat } from "three/src/math/MathUtils.js";
 
   onMounted(() => {
     const container = document.getElementById("stars-container");
@@ -39,13 +39,14 @@ import { randFloat } from "three/src/math/MathUtils.js";
       star.style.backgroundColor = starColors[Math.floor(Math.random() * starColors.length)];
       container.appendChild(star);
 
-      gsap.to(star, {
-        autoAlpha: Math.random(),
-        duration: Math.random() + 1,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-    });
+      anime({
+        targets: star,
+        opacity: [0, 1],
+        duration: Math.random() * 1000 + 1000,
+        easing: "easeInOutQuad",
+        direction: "alternate",
+        loop: true
+      });
   }
 });
 </script>

@@ -18,13 +18,12 @@ export const useDragScroll = (element: HTMLElement) => {
   let momentumInterval: NodeJS.Timeout | null = null;
   let momentumBuffer: NodeJS.Timeout | null = null;
   const elementDimensions = new Vector2(element.offsetWidth / 2, element.offsetHeight / 2);
-  console.log(elementDimensions);
   
   const updatePosition = (incrementX: number, incrementY: number) => {
     newPosition.x += incrementX;
     newPosition.y += incrementY;
-    newPosition.x = clamp(newPosition.x, 0, elementDimensions.x);
-    newPosition.y = clamp(newPosition.y, 0, elementDimensions.y);
+    newPosition.x = clamp(newPosition.x, -elementDimensions.x / 2, elementDimensions.x / 2);
+    newPosition.y = clamp(newPosition.y, -elementDimensions.y / 2, elementDimensions.y / 2);
     element.style.transform = `translate(${-newPosition.x}px, ${-newPosition.y}px)`;
   }
 
