@@ -1,15 +1,17 @@
 <template>
   <div class="move-cursor" id="app-container" @mousedown="audioManager.playSound('click');">
-    <div id="draggable-world" class="vignette"></div>
-    <div id="title">
-      k y l i n
+    <div id="draggable-world" class="vignette">
+      <Stars/>
     </div>
+    <TitleCard/>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { useDragScroll } from "./src/composables/dragScroll";
-  import AudioManager from "./src/utils/audioManager";
+  import TitleCard from "~/src/components/TitleCard.vue";
+  import Stars from "~/src/components/Stars.vue";
+  import { useDragScroll } from "~/src/composables/dragScroll";
+  import AudioManager from "../src/utils/audioManager";
   const audioManager = new AudioManager()
 
   onMounted(() => {
@@ -87,16 +89,5 @@
     width: 400px;
     height: 400px;
     border: 2px white;
-  }
-
-  #title {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2em;
-    color: white;
-    z-index: 10;
-    pointer-events: none;
-  }
+  }  
 </style>
