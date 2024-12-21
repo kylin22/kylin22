@@ -3,7 +3,6 @@ import { Vector2 } from "three";
 import { clamp } from "three/src/math/MathUtils.js";
  
 export const useDragScroll = (element: HTMLElement) => {
-  const scrollRef = ref(element);
   const isDragging = ref(false);
   const isMomentum = ref(false);
   const MIN_SPEED = 0;
@@ -29,21 +28,29 @@ export const useDragScroll = (element: HTMLElement) => {
     element.style.transform = `translate(${-newPosition.x}px, ${-newPosition.y}px)`;
   }
 
-  const startDrag = (event: MouseEvent) => {
+  const getPosition = (event: MouseEvent | TouchEvent) => {
+    const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+    const clientY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
+    return new Vector2(clientX, clientY);
+  }
+
+  const startDrag = (event: MouseEvent | TouchEvent) => {
     isMomentum.value = false;
     isDragging.value = true;
-    lastPosition = new Vector2(event.clientX, event.clientY);
+    lastPosition = getPosition(event);
     velocity = new Vector2(0, 0);
     lastTime = event.timeStamp;
     
     document.addEventListener("mousemove", moveDrag);
     document.addEventListener("mouseup", endDrag);
+    document.addEventListener("touchmove", moveDrag);
+    document.addEventListener("touchend", endDrag);
   }
 
-  const moveDrag = (event: MouseEvent) => {
+  const moveDrag = (event: MouseEvent | TouchEvent) => {
     if (!isDragging.value) return;
     
-    const currentPosition = new Vector2(event.clientX, event.clientY);
+    const currentPosition = getPosition(event);
 
     const difference = new Vector2().copy(lastPosition).sub(currentPosition);
     const dt = event.timeStamp - lastTime;
@@ -96,16 +103,17 @@ export const useDragScroll = (element: HTMLElement) => {
     }
   }
 
-  scrollRef.value.addEventListener("mousedown", startDrag);
+  element.addEventListener("mousedown", startDrag);
+  element.addEventListener("touchstart", startDrag);
 
   onUnmounted(() => {
-    if (scrollRef.value) {
-      scrollRef.value.removeEventListener("mousedown", startDrag);
+    if (element) {
+      element.removeEventListener("mousedown", startDrag);
     }
   })
 
   return {
-    scrollRef,
+    element,
     isDragging
   }
 }

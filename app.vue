@@ -2,7 +2,7 @@
   <div class="move-cursor" id="app-container" @mousedown="audioManager.playSound('click');">
     <div id="draggable-world" class="vignette"></div>
     <div id="title">
-      yippee !!!
+      k y l i n
     </div>
   </div>
 </template>
@@ -22,6 +22,12 @@
     document.addEventListener("contextmenu", (event) => {
       event.preventDefault();
     }, false);
+    document.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+    }, { passive: false });
+    document.addEventListener("touchmove", (event) => {
+      event.preventDefault();
+    }, { passive: false });
   });
   
   useHead({
@@ -73,6 +79,7 @@
     display: block;
     width: 200%;
     height: 200%;
+    z-index: 1;
   }
 
   #test {
@@ -87,8 +94,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 3em;
+    font-size: 2em;
     color: white;
-    text-shadow: 2px 2px 0px black;
+    z-index: 10;
+    pointer-events: none;
   }
 </style>
