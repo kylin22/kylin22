@@ -43,15 +43,15 @@
         targets: star,
         opacity: [0, 1],
         duration: Math.random() * 1000 + 1000,
-        easing: "easeInOutQuad",
+        easing: "easeInOutSine",
         direction: "alternate",
         loop: true
       });
-  }
-});
+    }
+  });
 </script>
 
-<style>
+<style lang="scss">
   #stars-container {
     position: absolute;
     top: 0;
