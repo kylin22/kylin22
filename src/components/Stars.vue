@@ -64,9 +64,6 @@
 
   .star {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background-color: white;
     border-radius: 50%;
   }
 </style>
