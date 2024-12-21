@@ -1,8 +1,8 @@
 import { Vector2 } from "three";
-import { onMounted } from "vue";
 
 export const useSquishyCursor = (element: HTMLElement) => {
-  const STRETCH_FACTOR = 0.2;
+  const STRETCH_FACTOR = 0.3;
+  const STRETCH_VELOCITY = 2;
 
   const cursor = document.createElement("div");
   cursor.id = "cursor";
@@ -22,13 +22,16 @@ export const useSquishyCursor = (element: HTMLElement) => {
     velocity = new Vector2().copy(mousePosition).sub(lastMousePosition);
     lastMousePosition = new Vector2().copy(mousePosition);
 
-    cursorPosition.lerp(mousePosition, 0.75);
-
-    const angle = new Vector2().copy(cursorPosition).sub(mousePosition).angle() * (180 / Math.PI);
-    const scaleX = 1 + Math.min(Math.abs(velocity.length()) * STRETCH_FACTOR, 1);
-    const scaleY = 1;
-
-    cursor.style.transform = `translate3d(${cursorPosition.x}px, ${cursorPosition.y}px, 0) rotate(${angle}deg) scale(${scaleX}, ${scaleY})`;
+    cursorPosition.lerp(mousePosition, 0.5);
+    
+    let angle = 0;
+    let scale = 1;
+    if (velocity.length() > STRETCH_VELOCITY) {
+      angle = new Vector2().copy(cursorPosition).sub(mousePosition).angle() * (180 / Math.PI);
+      scale = 1 + Math.min(Math.abs(velocity.length() - STRETCH_VELOCITY) * STRETCH_FACTOR, 2.5);
+    }
+   
+    cursor.style.transform = `translate3d(${cursorPosition.x}px, ${cursorPosition.y}px, 0) rotate(${angle}deg) scale(${scale}, 1)`;
 
     requestAnimationFrame(animate);
   }
