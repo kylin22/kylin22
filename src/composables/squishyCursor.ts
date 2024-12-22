@@ -1,14 +1,16 @@
 import { Vector2 } from "three";
 
 export const useSquishyCursor = (element: HTMLElement) => {
-  const STRETCH_FACTOR = 0.3;
-  const STRETCH_VELOCITY = 2;
+  const STRETCH_FACTOR = 0.25;
+  const STRETCH_VELOCITY = 3;
+  const POSITION_CORRECTION = 1;
 
   const cursor = document.createElement("div");
   cursor.id = "cursor";
   cursor.style.display = "none";
+  cursor.style.transformOrigin = "center";
   document.body.appendChild(cursor);
-  element.style.cursor = "none";
+  element.style.cursor = "pointer";
 
   const elementCentre = new Vector2(element.offsetWidth / 4, element.offsetHeight / 4);
 
@@ -18,7 +20,7 @@ export const useSquishyCursor = (element: HTMLElement) => {
   let velocity = new Vector2(0, 0);
 
   document.addEventListener("mousemove", (event) => {
-    mousePosition = new Vector2(event.clientX, event.clientY);
+    mousePosition = new Vector2(event.clientX - cursor.clientWidth / 2 + POSITION_CORRECTION, event.clientY - cursor.clientHeight / 2 + POSITION_CORRECTION);
     cursor.style.display = "block";
   });
 
