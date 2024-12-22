@@ -10,7 +10,7 @@ export const useSquishyCursor = (element: HTMLElement) => {
   cursor.style.display = "none";
   cursor.style.transformOrigin = "center";
   document.body.appendChild(cursor);
-  element.style.cursor = "pointer";
+  element.style.cursor = "none";
 
   const elementCentre = new Vector2(element.offsetWidth / 4, element.offsetHeight / 4);
 
