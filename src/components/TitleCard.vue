@@ -66,7 +66,7 @@
     font-size: 0.5em;
     color: white;
     text-align: center;
-    transition: opacity 1s, top 0.75s ;
+    transition: opacity 1s, top 0.75s;
 
     &.hidden {
       opacity: 0;

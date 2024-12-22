@@ -40,14 +40,13 @@
       { name: "description", content: "A personal website portfolio" }
     ]
   });
-  //TODO: Add Loading Screen
 </script>
 
 <style lang="scss">
   @import "~/src/assets/theme.scss";
 
   html, body, #__nuxt, #__layout, #app-container {
-    cursor: url("~/src/assets/cursors/curs.png"), auto;
+    cursor: none;
     font-family: "Courier New", Courier, monospace;
     margin: 0px;
     background-color: $background-color;
@@ -62,18 +61,6 @@
     &::-webkit-scrollbar {
       display: none;
     }
-  }
-
-  #title-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2em;
-    font-weight: bold;
-    color: white;
-    z-index: 10;
-    pointer-events: none;
   }
 
   .vignette {
@@ -109,9 +96,14 @@
     left: 0;
     width: 10px;
     height: 10px;
-    background-color: $primary-color;
+    background-color: #c3a8e6;
     border-radius: 50%;
     pointer-events: none;
     mix-blend-mode: difference;
+    transition: width 0.2s, height 0.2s;
+    &.expand {
+      width: 18px;
+      height: 18px;
+    }
   }
 </style>
