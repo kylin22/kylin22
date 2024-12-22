@@ -40,6 +40,7 @@
       { name: "description", content: "A personal website portfolio" }
     ]
   });
+  //TODO: Add Loading Screen
 </script>
 
 <style lang="scss">

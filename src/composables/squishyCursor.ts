@@ -3,6 +3,7 @@ import { Vector2 } from "three";
 export const useSquishyCursor = (element: HTMLElement) => {
   const STRETCH_FACTOR = 0.3;
   const STRETCH_VELOCITY = 2;
+  const ANGLE_THRESHOLD = 60;
 
   const cursor = document.createElement("div");
   cursor.id = "cursor";
@@ -11,6 +12,7 @@ export const useSquishyCursor = (element: HTMLElement) => {
 
   let mousePosition = new Vector2(0, 0);
   let lastMousePosition = new Vector2(0, 0);
+  let lastAngle = 0;
   let cursorPosition = new Vector2(0, 0);
   let velocity = new Vector2(0, 0);
 
@@ -24,12 +26,17 @@ export const useSquishyCursor = (element: HTMLElement) => {
 
     cursorPosition.lerp(mousePosition, 0.5);
     
-    let angle = 0;
+    let angle = new Vector2().copy(cursorPosition).sub(mousePosition).angle() * (180 / Math.PI);
     let scale = 1;
-    if (velocity.length() > STRETCH_VELOCITY) {
-      angle = new Vector2().copy(cursorPosition).sub(mousePosition).angle() * (180 / Math.PI);
+    
+    const angleChange = Math.abs((angle - lastAngle) % 180);
+    if (velocity.length() > STRETCH_VELOCITY && (angleChange < ANGLE_THRESHOLD || (angleChange > 180 - ANGLE_THRESHOLD && angleChange < 180))) {
       scale = 1 + Math.min(Math.abs(velocity.length() - STRETCH_VELOCITY) * STRETCH_FACTOR, 2.5);
+    } else {
+      console.log(angleChange);
     }
+
+    lastAngle = angle;
    
     cursor.style.transform = `translate3d(${cursorPosition.x}px, ${cursorPosition.y}px, 0) rotate(${angle}deg) scale(${scale}, 1)`;
 
