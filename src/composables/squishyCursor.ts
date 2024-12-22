@@ -6,16 +6,20 @@ export const useSquishyCursor = (element: HTMLElement) => {
 
   const cursor = document.createElement("div");
   cursor.id = "cursor";
+  cursor.style.display = "none";
   document.body.appendChild(cursor);
   element.style.cursor = "none";
 
-  let mousePosition = new Vector2(0, 0);
-  let lastMousePosition = new Vector2(0, 0);
-  let cursorPosition = new Vector2(0, 0);
+  const elementCentre = new Vector2(element.offsetWidth / 4, element.offsetHeight / 4);
+
+  let mousePosition = new Vector2().copy(elementCentre);
+  let lastMousePosition = new Vector2().copy(elementCentre);
+  let cursorPosition = new Vector2().copy(elementCentre);
   let velocity = new Vector2(0, 0);
 
   document.addEventListener("mousemove", (event) => {
     mousePosition = new Vector2(event.clientX, event.clientY);
+    cursor.style.display = "block";
   });
 
   function animate() {
