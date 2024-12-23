@@ -102,8 +102,8 @@
     mix-blend-mode: difference;
     transition: width 0.2s, height 0.2s;
     &.expand {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
     }
   }
 </style>
