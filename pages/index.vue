@@ -1,5 +1,5 @@
 <template>
-  <div class="move-cursor vignette" id="app-container" @mousedown="audioManager.playSound('click');">
+  <div class="move-cursor vignette" id="app-container" @mousedown="console.log('clicked');">
     <div id="draggable-world">
       <Stars/>
     </div>
@@ -87,10 +87,11 @@
     width: 200%;
     height: 200%;
     z-index: 1;
+    pointer-events: none;
   }
 
   #cursor {
-    z-index: 11;
+    z-index: 100;
     position: fixed;
     top: 0;
     left: 0;

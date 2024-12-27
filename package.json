@@ -11,17 +11,19 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@tresjs/cientos": "^4.0.3",
+    "@tresjs/nuxt": "^3.0.7",
     "@types/animejs": "^3.1.12",
-    "@types/three": "^0.171.0",
     "animejs": "^3.2.2",
     "gh-pages": "^6.2.0",
     "nuxt": "^3.14.1592",
+    "three": "^0.171.0",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@types/three": "^0.171.0",
     "cross-env": "^7.0.3",
-    "sass-embedded": "^1.83.0",
-    "three": "^0.171.0"
+    "sass-embedded": "^1.83.0"
   }
 }
