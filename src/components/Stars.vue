@@ -6,21 +6,12 @@
   import { onMounted } from "vue";
   import anime from "animejs";
   import { randFloat } from "three/src/math/MathUtils.js";
+  import { stars } from "../models/Star";
 
   onMounted(() => {
     const container = document.getElementById("stars-container");
     const parent = container?.parentElement;
     const NUM_STARS = 300;
-    const starColors = [
-      //stars
-      "#9db4ff", "#a2b9ff", "#a7bcff", "#aabfff", "#afc3ff",
-      "#baccff", "#c0d1ff", "#cad8ff", "#e4e8ff", "#edeeff",
-      "#fbf8ff", "#fff9f9", "#fff5ec", "#fff4e8", "#fff1df",
-      "#ffebd1", "#ffd7ae", "#ffc690", "#ffbe7f", "#ffbb7b",
-      "#ffbb7b",
-      //other bodies
-      "#00ffec", "#ffe1c7", "#ffdeba", "#49d6ff"
-    ];
 
     if (!container || !parent) {
       return;
@@ -36,7 +27,8 @@
       star.style.width = `${size}px`;
       star.style.height = `${size}px`;
 
-      star.style.backgroundColor = starColors[Math.floor(Math.random() * starColors.length)];
+      star.style.backgroundColor = stars[Math.floor(Math.random() * stars.length)].color;
+      star.style.zIndex = "1";
       container.appendChild(star);
 
       anime({

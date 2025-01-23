@@ -2,8 +2,8 @@
   <div 
     id="title-container" 
     ref="titleContainer"
-    @mouseover="ghostTextVisible = true" 
-    @mouseleave="ghostTextVisible = false"
+    @mouseover="mouseOver" 
+    @mouseleave="mouseLeave"
   >
     <slot></slot>
     <div id="subtitle" class="hidden">
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-  import anime from "animejs";
+  import anime, { set } from "animejs";
   import Icon from "./Icon.vue";
 
   const props = defineProps<{
@@ -31,12 +31,64 @@
   const titleContainer = ref<HTMLDivElement | null>(null);
   const ghostTextVisible = ref(false);
 
-  const subtitleText = ref("Student and Programmer");
-  const normalText = "Student and Programmer";
-  const hoverText = "Advocate for Interactivity";
+  const subtitleText = ref("STUDENT AND PROGRAMMER");
+  const normalText = "STUDENT AND PROGRAMMER";
+  const hoverText = "ADVOCATE FOR INTERACTIVITY";
+  let shufflingInterval: null | NodeJS.Timeout = null;
+  let shufflingStop: null | NodeJS.Timeout = null;
+
+  const mouseOver = () => {
+    ghostTextVisible.value = true;
+    shuffleText(hoverText);
+  };
+
+  const mouseLeave = () => {
+    ghostTextVisible.value = false;
+    shuffleText(normalText);
+  };
   
-  const glitchText = (target: string) => {
-    subtitleText.value = target;
+  const shuffleText = (target: string) => {
+    if (shufflingInterval) {
+      clearInterval(shufflingInterval);
+    }
+    if (shufflingStop) {
+      clearTimeout(shufflingStop);
+    }
+
+    const randomCharacter = () => {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&";
+      return chars.charAt(Math.floor(Math.random() * chars.length));
+    };
+
+    shufflingStop = setTimeout(() => {
+      console.log("stopping shuffle");
+      if (shufflingInterval) {
+        clearInterval(shufflingInterval);
+      }
+      subtitleText.value = target;
+    }, 2000);
+
+    shufflingInterval = setInterval(() => {
+      let shufflingText = subtitleText.value;
+      if (shufflingText.length > target.length) {
+        shufflingText = shufflingText.substring(0, target.length);
+      }
+      for (let i = 0; i < target.length; i++) {
+        if (shufflingText[i] === target[i]) {
+          continue;
+        }
+        if (target[i] === " ") {
+          shufflingText = shufflingText.substring(0, i) + " " + shufflingText.substring(i + 1);
+          continue;
+        }
+        shufflingText = shufflingText.substring(0, i) + randomCharacter() + shufflingText.substring(i + 1);
+      }
+      subtitleText.value = shufflingText;
+
+      if (shufflingText === target && shufflingInterval) {
+        clearInterval(shufflingInterval);
+      }
+    }, 15);
   };
   
   const generateTitlePathAnimation = (element: HTMLElement, path: SVGPathElement) => {
@@ -82,10 +134,6 @@
     if (!(svgElement && subtitle)) {
       return;
     }
-
-    setTimeout(() => {
-      glitchText(hoverText);
-    }, 5000);
 
     const paths = svgElement.querySelectorAll("path");
     paths.forEach(path => {
@@ -141,10 +189,14 @@
     }
   }
 
+  p {
+    pointer-events: all;
+  }
+
   .ghost-text {
     width: 5em;
     color: transparent;
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.1);
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
     z-index: 0;
   }
 </style>
