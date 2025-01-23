@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@tresjs/cientos": "^4.0.3",
-    "@tresjs/nuxt": "^3.0.7",
     "@types/animejs": "^3.1.12",
     "animejs": "^3.2.2",
     "gh-pages": "^6.2.0",
@@ -22,6 +21,7 @@
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@tresjs/nuxt": "^3.0.7",
     "@types/three": "^0.171.0",
     "cross-env": "^7.0.3",
     "sass-embedded": "^1.83.0"
