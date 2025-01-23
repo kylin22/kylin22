@@ -6,11 +6,17 @@
           :position="[3, 3, 3]"
           :look-at="[0, 0, 0]"
         />
+      </Suspense>
+      <Suspense>
         <OrbitControls/>
-          <TresMesh>
+      </Suspense>
+      <Suspense>
+        <TresMesh>
           <TresIcosahedronGeometry :args="[1.8, 0]"/>
           <TresMeshMatcapMaterial :color="0xac3232"/>
         </TresMesh>
+      </Suspense>
+      <Suspense>
         <TresMesh>
           <TresIcosahedronGeometry :args="[2, 0]"/>
           <TresMeshNormalMaterial :side="BackSide"/>
