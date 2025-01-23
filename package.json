@@ -6,7 +6,7 @@
     "build": "nuxt build",
     "dev": "cross-env NUXT_HOST=0.0.0.0 NUXT_PORT=3333 nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "preview": "cross-env NUXT_HOST=0.0.0.0 NUXT_PORT=3333 nuxt preview",
     "postinstall": "nuxt prepare",
     "deploy": "gh-pages -d dist"
   },

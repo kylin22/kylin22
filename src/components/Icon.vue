@@ -1,20 +1,21 @@
 <template>
   <div id="icon-container">
     <TresCanvas>
-      <TresPerspectiveCamera
-        :position="[3, 3, 3]"
-        :look-at="[0, 0, 0]"
-      />
-      <OrbitControls/>
-      <TresMesh>
-        <TresIcosahedronGeometry :args="[1.8, 0]"/>
-        <TresMeshMatcapMaterial :color="0xac3232"/>
-      </TresMesh>
-      <TresMesh>
-        <TresIcosahedronGeometry :args="[2, 0]"/>
-        <TresMeshNormalMaterial :side="BackSide"/>
-      </TresMesh>
-      
+      <Suspense>
+        <TresPerspectiveCamera
+          :position="[3, 3, 3]"
+          :look-at="[0, 0, 0]"
+        />
+        <OrbitControls/>
+          <TresMesh>
+          <TresIcosahedronGeometry :args="[1.8, 0]"/>
+          <TresMeshMatcapMaterial :color="0xac3232"/>
+        </TresMesh>
+        <TresMesh>
+          <TresIcosahedronGeometry :args="[2, 0]"/>
+          <TresMeshNormalMaterial :side="BackSide"/>
+        </TresMesh>
+      </Suspense>
     </TresCanvas>
   </div>
 </template>
