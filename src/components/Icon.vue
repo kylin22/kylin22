@@ -5,7 +5,7 @@
         :position="[3, 3, 3]"
         :look-at="[0, 0, 0]"
       />
-      <!-- <OrbitControls/> -->
+      <OrbitControls/>
       <TresMesh>
         <TresIcosahedronGeometry :args="[1.8, 0]"/>
         <TresMeshMatcapMaterial :color="0xac3232"/>
