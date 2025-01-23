@@ -7,8 +7,7 @@
   >
     <slot></slot>
     <div id="subtitle" class="hidden">
-      <p v-if="!ghostTextVisible">Student and Programmer</p>
-      <p v-else>Advocate for Interactivity</p>
+      <p>{{ subtitleText }}</p>
     </div>
   </div>
   <div id="background-text" :class="{ hidden: !ghostTextVisible }">
@@ -32,43 +31,66 @@
   const titleContainer = ref<HTMLDivElement | null>(null);
   const ghostTextVisible = ref(false);
 
-  onMounted(() => {
-    if (titleContainer.value) {
-      const svgElement = titleContainer.value.querySelector("g");
-      const subtitle = titleContainer.value.querySelector("#subtitle");
-      if (svgElement && subtitle) {
-        const paths = svgElement.querySelectorAll("path");
-        paths.forEach(path => {
-          const length = path.getTotalLength();
-          path.style.strokeDasharray = `${length}`;
-          path.style.strokeDashoffset = `${length}`;
-          anime({
-            targets: path,
-            strokeDashoffset: [length, 0],
-            duration: 5000,
-            easing: "easeInOutQuad",
-            delay: 1000,
-            direction: "alternate",
-            loop: false,
-            begin: () => {
-              // start second animation slightly early to account for path completion
-              setTimeout(() => {
-                anime({
-                  targets: path,
-                  translateY: -25,
-                  duration: 1000,
-                  easing: "easeInOutQuad",
-                  complete: () => {
-                    subtitle.classList.remove('hidden');
-                    subtitle.classList.add('visible');
-                  }
-                });
-              }, 3000);
-            }
-          });
-        });
+  const subtitleText = ref("Student and Programmer");
+  const normalText = "Student and Programmer";
+  const hoverText = "Advocate for Interactivity";
+  
+  const glitchText = (target: string) => {
+    subtitleText.value = target;
+  };
+  
+  const generateTitlePathAnimation = (element: HTMLElement, path: SVGPathElement) => {
+    const length = path.getTotalLength();
+    path.style.strokeDasharray = `${length}`;
+    path.style.strokeDashoffset = `${length}`;
+    
+    const pushUpAnimation = anime({
+      targets: path,
+      translateY: -25,
+      duration: 1000,
+      easing: "easeInOutQuad",
+      complete: () => {
+        element.classList.remove('hidden');
+        element.classList.add('visible');
       }
+    });
+    pushUpAnimation.pause();
+    
+    anime({
+      targets: path,
+      strokeDashoffset: [length, 0],
+      duration: 5000,
+      easing: "easeInOutQuad",
+      delay: 1000,
+      direction: "alternate",
+      loop: false,
+      begin: () => {
+        // start second animation slightly early to account for path completion
+        setTimeout(() => {
+          pushUpAnimation.play();
+        }, 3000);
+      }
+    });
+  }
+
+  onMounted(() => {
+    if (!titleContainer.value) {
+      return;
     }
+    const svgElement = titleContainer.value.querySelector("g");
+    const subtitle = titleContainer.value.querySelector("#subtitle") as HTMLElement;
+    if (!(svgElement && subtitle)) {
+      return;
+    }
+
+    setTimeout(() => {
+      glitchText(hoverText);
+    }, 5000);
+
+    const paths = svgElement.querySelectorAll("path");
+    paths.forEach(path => {
+      generateTitlePathAnimation(subtitle, path);
+    });
   });
 </script>
 
@@ -122,7 +144,7 @@
   .ghost-text {
     width: 5em;
     color: transparent;
-    text-shadow: 0 0 4px rgba(212, 191, 219, 0.5);
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.1);
     z-index: 0;
   }
 </style>

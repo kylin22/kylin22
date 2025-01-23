@@ -1,9 +1,9 @@
 <template>
-  <div class="move-cursor vignette" id="app-container" @mousedown="console.log('clicked');">
+  <div class="move-cursor vignette" id="app-container">
+    <Navigator/>
     <div id="draggable-world">
       <Stars/>
     </div>
-    <Navigator/>
   </div>
 </template>
 
@@ -40,11 +40,14 @@
       { name: "description", content: "A personal website portfolio" }
     ]
   });
+
+  //TODO text scramble transition for hover subtitle text
+  //TODO move out animation for language text
 </script>
 
 <style lang="scss">
   @import "~/src/assets/theme.scss";
-
+  
   html, body, #__nuxt, #__layout, #app-container {
     cursor: none;
     font-family: "Courier New", Courier, monospace;
@@ -103,8 +106,8 @@
     mix-blend-mode: difference;
     transition: width 0.2s, height 0.2s;
     &.expand {
-      width: 16px;
-      height: 16px;
+      width: 10px;
+      height: 10px;
     }
   }
 </style>

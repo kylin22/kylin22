@@ -102,17 +102,14 @@ export const useDragScroll = (element: HTMLElement) => {
     }
   }
 
-  element.addEventListener("mousedown", startDrag);
-  element.addEventListener("touchstart", startDrag);
+  document.addEventListener("mousedown", startDrag);
+  document.addEventListener("touchstart", startDrag);
 
   onUnmounted(() => {
-    if (element) {
-      element.removeEventListener("mousedown", startDrag);
-    }
-  })
+    document.removeEventListener("mousedown", startDrag);
+  });
 
   return {
-    element,
     isDragging
   }
 }
