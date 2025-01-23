@@ -21,8 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-  import anime, { set } from "animejs";
-  import Icon from "./Icon.vue";
+  import anime from "animejs";
 
   const props = defineProps<{
     currentPage: string;
@@ -61,7 +60,6 @@
     };
 
     shufflingStop = setTimeout(() => {
-      console.log("stopping shuffle");
       if (shufflingInterval) {
         clearInterval(shufflingInterval);
       }
