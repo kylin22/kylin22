@@ -1,10 +1,13 @@
 <template>
+  
   <div class="move-cursor vignette" id="app-container">
     <Navigator/>
     <div id="draggable-world">
       <Stars/>
     </div>
+    <ScrollPrompt/>
   </div>
+  
 </template>
 
 <script setup lang="ts">
@@ -13,6 +16,7 @@
   import { useSquishyCursor } from "~/src/composables/squishyCursor";
   import AudioManager from "../src/utils/audioManager";
   import Navigator from "~/src/components/Navigator.vue";
+  import ScrollPrompt from "~/src/components/ScrollPrompt.vue";
   const audioManager = new AudioManager()
 
   onMounted(() => {
@@ -89,7 +93,7 @@
     top: -50%;
     width: 200%;
     height: 200%;
-    z-index: -1;
+    z-index: 1;
     pointer-events: none;
   }
 

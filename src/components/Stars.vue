@@ -12,6 +12,8 @@
     const container = document.getElementById("stars-container");
     const parent = container?.parentElement;
     const NUM_STARS = 300;
+    const STAR_MIN = 0.5;
+    const STAR_MAX = 3;
 
     if (!container || !parent) {
       return;
@@ -23,12 +25,14 @@
       star.style.left = `${Math.random() * parent?.offsetWidth}px`;
       star.style.top = `${Math.random() * parent?.offsetHeight}px`;
 
-      const size = randFloat(0.5, 3);
+      const size = randFloat(STAR_MIN, STAR_MAX);
       star.style.width = `${size}px`;
       star.style.height = `${size}px`;
 
-      star.style.backgroundColor = stars[Math.floor(Math.random() * stars.length)].color;
+      const starID = Math.floor(Math.random() * stars.length);
+      star.style.backgroundColor = stars[starID].color;
       star.style.zIndex = "1";
+      star.setAttribute('data-star-id', starID.toString());
       container.appendChild(star);
 
       anime({
@@ -40,6 +44,15 @@
         loop: true
       });
     }
+
+    document.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      console.log('Click event!', target);
+      if (target && target.classList.contains('star')) {
+        const starId = target.getAttribute('data-star-id');
+        console.log('Star clicked!', starId, target);
+      }
+    });
   });
 </script>
 
@@ -57,5 +70,16 @@
   .star {
     position: absolute;
     border-radius: 50%;
+  }
+
+  .star::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    z-index: -1;
+    background: transparent;
   }
 </style>

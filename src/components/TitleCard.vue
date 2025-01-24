@@ -23,10 +23,6 @@
 <script lang="ts" setup>
   import anime from "animejs";
 
-  const props = defineProps<{
-    currentPage: string;
-  }>();
-
   const titleContainer = ref<HTMLDivElement | null>(null);
   const ghostTextVisible = ref(false);
 

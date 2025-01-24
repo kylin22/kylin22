@@ -25,8 +25,8 @@
 
 <style lang="scss">
   #icon-container {
-    height: 20%;
-    width: 20%;
+    height: 10em;
+    width: 10em;
     z-index: 100;
     pointer-events: all;
   }
