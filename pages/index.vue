@@ -89,7 +89,7 @@
     top: -50%;
     width: 200%;
     height: 200%;
-    z-index: 1;
+    z-index: -1;
     pointer-events: none;
   }
 

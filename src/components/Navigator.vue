@@ -58,7 +58,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     overflow: hidden;
-    z-index: -1;
+    z-index: 10;
   }
 
   #click-prompt {

@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
+    "build": "NUXT_APP_BASE_URL=/<repository>/ npx nuxt build --preset github_pages",
+    "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "cross-env NUXT_HOST=0.0.0.0 NUXT_PORT=3333 nuxt preview",
     "postinstall": "nuxt prepare",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tresjs/cientos": "^4.0.3",
+    "@tresjs/nuxt": "^3.0.7",
     "@types/animejs": "^3.1.12",
     "animejs": "^3.2.2",
     "gh-pages": "^6.2.0",
@@ -21,7 +22,6 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@tresjs/nuxt": "^3.0.7",
     "@types/three": "^0.171.0",
     "cross-env": "^7.0.3",
     "sass-embedded": "^1.83.0"

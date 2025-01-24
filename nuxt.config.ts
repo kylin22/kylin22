@@ -6,4 +6,5 @@ export default defineNuxtConfig({
   tres: {
     glsl: true,
   },
+  ssr: false,
 })
