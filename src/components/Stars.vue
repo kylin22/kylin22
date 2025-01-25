@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
   import { onMounted } from "vue";
-  import anime, { get } from "animejs";
+  import anime from "animejs";
   import { randFloat } from "three/src/math/MathUtils.js";
   import { stars } from "../models/Star";
   import { Vector2 } from "three";
@@ -81,20 +81,19 @@
 
         svgContainer.appendChild(line);
 
-        anime({
+        const expandLine = anime({
           targets: line,
           x2: endPoint.x,
           y2: endPoint.y,
           duration: LINE_ANIMATE_TIME,
-          easing: "easeInOutSine"
+          easing: "easeInOutSine",
+          autoplay: false,
         });
+
+        return expandLine;
       }
 
       const displayInfoBox = (lineAngle: number, location: Vector2, color: string) => {
-        const starsContainer = document.getElementById("stars-container");
-        if (!starsContainer) {
-          return;
-        }
         const infoBox = document.createElement("div");
         infoBox.classList.add("info-box");
         infoBox.style.outline = `2px solid ${color}`;
@@ -123,13 +122,13 @@
           endTop -= INFO_BOX_HEIGHT;
         }
 
-        starsContainer.appendChild(infoBox);
+        container!.appendChild(infoBox);
 
         setTimeout(() => {
           infoBox.style.opacity = "1";
         }, LINE_ANIMATE_TIME);
 
-        anime({
+        const expandInfoBox = anime({
           targets: infoBox,
           width: `${INFO_BOX_WIDTH}px`,
           height: `${INFO_BOX_HEIGHT}px`,
@@ -137,10 +136,11 @@
           top: endTop,
           duration: BOX_ANIMATE_TIME,
           easing: "easeInOutSine",
-          delay: LINE_ANIMATE_TIME
+          delay: LINE_ANIMATE_TIME,
+          autoplay: false,
         });
 
-        return infoBox;
+        return { infoBox, expandInfoBox };
       }
 
       const getStarObject = (starElement: HTMLElement) => {
@@ -162,11 +162,13 @@
       if (!star) {
         return;
       }
-      displayInfoLine(startPoint, endPoint, star.color);
-      const infoBox = displayInfoBox(angle, endPoint, star.color); 
+      const expandLine = displayInfoLine(startPoint, endPoint, star.color);
+      const { infoBox, expandInfoBox } = displayInfoBox(angle, endPoint, star.color); 
       if (!infoBox) {
         return;
       }
+      expandLine.play();
+      expandInfoBox.play();
       displayStarInfo(infoBox);
     };
 

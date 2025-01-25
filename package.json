@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "NUXT_APP_BASE_URL=/<repository>/ npx nuxt build --preset github_pages",
+    "build": "nuxt build",
     "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "cross-env NUXT_HOST=0.0.0.0 NUXT_PORT=3333 nuxt preview",
