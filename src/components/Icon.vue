@@ -5,7 +5,7 @@
         :position="[3, 3, 3]"
         :look-at="[0, 0, 0]"
       />
-      <OrbitControls/>
+      <OrbitControls :enable-zoom="false" :enable-pan="false"/>
       <TresMesh>
         <TresIcosahedronGeometry :args="[1.8, 0]"/>
         <TresMeshMatcapMaterial :color="0xac3232"/>
@@ -21,6 +21,12 @@
 <script setup lang="ts">
   import { BackSide } from "three";
   import { OrbitControls } from "@tresjs/cientos";
+  onMounted(() => {
+    const iconContainer = document.getElementById("icon-container");
+    if (iconContainer) {
+      iconContainer.style.animation = "visible 1.5s forwards";
+    }
+  });
 </script>
 
 <style lang="scss">
@@ -29,5 +35,15 @@
     width: 10em;
     z-index: 100;
     pointer-events: all;
+    opacity: 0;
+  }
+
+  @keyframes visible {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 </style>

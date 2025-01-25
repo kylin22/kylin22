@@ -1,13 +1,16 @@
 <template>
-  
-  <div class="move-cursor vignette" id="app-container">
-    <Navigator/>
-    <div id="draggable-world">
-      <Stars/>
+  <div id="app">
+    <div class="move-cursor vignette" id="intro-container">
+      <Navigator/>
+      <div id="draggable-world">
+        <Stars/>
+      </div>
+      <ScrollPrompt/>
     </div>
-    <ScrollPrompt/>
+    <div id="skills">
+      <h1>Jumpscare</h1>
+    </div>
   </div>
-  
 </template>
 
 <script setup lang="ts">
@@ -52,7 +55,7 @@
 <style lang="scss">
   @import "~/src/assets/theme.scss";
   
-  html, body, #__nuxt, #__layout, #app-container {
+  html, body, #__nuxt, #__layout {
     cursor: none;
     font-family: "Courier New", Courier, monospace;
     margin: 0px;
@@ -63,7 +66,6 @@
     caret-color: transparent;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    overflow-y: hidden;
 
     &::-webkit-scrollbar {
       display: none;
@@ -78,12 +80,41 @@
     height: 100%;
   }
 
-  .move-cursor {
-    cursor: url("~/src/assets/cursors/move.png"), auto;
+  #app {
+    scroll-behavior: smooth;
+    display: flex;
+    width: 100%;
+    height: 200vh;
+    flex-direction: column;
   }
 
-  .selectable {
-    cursor: url("~/src/assets/cursors/curstext.png"), auto;
+  #skills {
+    position: relative;
+    font-family: monospace;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    background-color: $primary-color;
+    color: $background-color;
+
+    & h1 {
+      position: absolute;
+      width: 100%;
+      margin: 0px;
+      font-size: 10em;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  #intro-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
   }
 
   #draggable-world {

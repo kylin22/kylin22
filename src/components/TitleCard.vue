@@ -143,6 +143,7 @@
     align-items: center;
     margin-top: 4em;
     z-index: 20;
+    pointer-events: all;
   }
   
   #subtitle {
