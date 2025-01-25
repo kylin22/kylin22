@@ -8,7 +8,7 @@
   import { onMounted } from "vue";
   import anime from "animejs";
   import { randFloat } from "three/src/math/MathUtils.js";
-  import { stars } from "../models/Star";
+  import { Star, stars } from "../models/Star";
   import { Vector2 } from "three";
 
   onMounted(() => {
@@ -18,6 +18,13 @@
     const NUM_STARS = 300;
     const STAR_MIN = 0.5;
     const STAR_MAX = 3;
+
+    interface InfoAnimation {
+      element: SVGLineElement | HTMLElement;
+      animation: anime.AnimeInstance;
+      star: HTMLElement;
+    }
+    const infoAnimations: InfoAnimation[] = [];
 
     if (!container || !parent || !svgContainer) {
       return;
@@ -50,10 +57,12 @@
     }
 
     const displayStarInfo = (starElement: HTMLElement) => {
-      const INFO_BOX_WIDTH = 100;
-      const INFO_BOX_HEIGHT = 50;
+      const INFO_BOX_WIDTH = 190;
+      const INFO_BOX_HEIGHT = 75;
+      const LINE_LENGTH = 100;
       const LINE_ANIMATE_TIME = 300;
       const BOX_ANIMATE_TIME = 300;
+      const MAX_DIGITS = 5;
 
       const getStarLocation = () => {
         const starSize = parseFloat(starElement.style.width);
@@ -64,46 +73,69 @@
 
       const generateInfoLocation = (startPoint: Vector2) => {
         const angle = Math.random() * 2 * Math.PI;
-        const length = 80;
-        const endPoint = new Vector2().copy(startPoint).add(new Vector2(Math.cos(angle), Math.sin(angle)).multiplyScalar(length));
+        const endPoint = new Vector2().copy(startPoint).add(new Vector2(Math.cos(angle), Math.sin(angle)).multiplyScalar(LINE_LENGTH));
         return { angle: angle, endPoint: endPoint}
       }
+
+      const lineAnimation = (line: SVGLineElement, endPoint: Vector2) => anime({
+        targets: line,
+        x2: endPoint.x,
+        y2: endPoint.y,
+        endDelay: BOX_ANIMATE_TIME,
+        duration: LINE_ANIMATE_TIME,
+        easing: "easeInOutSine",
+        autoplay: false,
+      });
+
       
-      const displayInfoLine = (startPoint: Vector2, endPoint: Vector2, color: string) => {
+      const displayInfoText = (boxElement: HTMLElement, star: Star) => {
+        let temperature = star.temperature.toString().length > 5 ? star.temperature.toExponential(1) : star.temperature;
+        let luminosity = star.luminosity.toString().length > 5 ? star.luminosity.toExponential(1) : star.luminosity;
+        boxElement.innerHTML += `
+          <h3>${star.type}</h3>
+          <p>Class: ${star.starClass}</p>
+          <p>Temperature: ${temperature} K</p>
+          <p>Luminosity: ${luminosity} L<sub>☉</sub></p>
+        `;
+      }
+
+      const infoBoxAnimation = (boxElement: HTMLElement, endLeft: number, endTop: number, star: Star) => anime({
+        targets: boxElement,
+        width: `${INFO_BOX_WIDTH}px`,
+        height: `${INFO_BOX_HEIGHT}px`,
+        left: endLeft,
+        top: endTop,
+        duration: BOX_ANIMATE_TIME,
+        easing: "easeInOutSine",
+        delay: LINE_ANIMATE_TIME,
+        autoplay: false,
+        complete: () => {
+          displayInfoText(boxElement, star);
+        }
+      });
+      
+      const generateInfoLine = (startPoint: Vector2, color: string) => {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
         line.setAttribute("x1", startPoint.x.toString());
         line.setAttribute("y1", startPoint.y.toString());
         line.setAttribute("x2", startPoint.x.toString());
         line.setAttribute("y2", startPoint.y.toString());
+        line.classList.add("info-line");
         line.style.stroke = color;
-        line.style.strokeWidth = "2px";
 
         svgContainer.appendChild(line);
 
-        const expandLine = anime({
-          targets: line,
-          x2: endPoint.x,
-          y2: endPoint.y,
-          duration: LINE_ANIMATE_TIME,
-          easing: "easeInOutSine",
-          autoplay: false,
-        });
-
-        return expandLine;
+        return line;
       }
 
-      const displayInfoBox = (lineAngle: number, location: Vector2, color: string) => {
+      const generateInfoBox = (lineAngle: number, location: Vector2, color: string) => {
         const infoBox = document.createElement("div");
         infoBox.classList.add("info-box");
         infoBox.style.outline = `2px solid ${color}`;
-        infoBox.style.boxSizing = "border-box";
-        infoBox.style.position = "absolute";
-        infoBox.style.width = "0px";
-        infoBox.style.height = "0px";
+        infoBox.style.color = color;
         infoBox.style.left = `${location.x}px`;
         infoBox.style.top = `${location.y}px`;
-        infoBox.style.opacity = "0";
 
         let endLeft = location.x;
         let endTop = location.y;
@@ -128,19 +160,7 @@
           infoBox.style.opacity = "1";
         }, LINE_ANIMATE_TIME);
 
-        const expandInfoBox = anime({
-          targets: infoBox,
-          width: `${INFO_BOX_WIDTH}px`,
-          height: `${INFO_BOX_HEIGHT}px`,
-          left: endLeft,
-          top: endTop,
-          duration: BOX_ANIMATE_TIME,
-          easing: "easeInOutSine",
-          delay: LINE_ANIMATE_TIME,
-          autoplay: false,
-        });
-
-        return { infoBox, expandInfoBox };
+        return { infoBox, endLeft, endTop };
       }
 
       const getStarObject = (starElement: HTMLElement) => {
@@ -152,9 +172,36 @@
         return star;
       }
 
-      const displayStarInfo = (boxElement: HTMLElement) => {
-        
+      const removeOldInfo = () => {
+        const removeInfoElement = (infoAnimation: InfoAnimation) => {
+          infoAnimation.element.parentNode!.removeChild(infoAnimation.element);
+          infoAnimations.splice(infoAnimations.indexOf(infoAnimation), 1);
+        }
+        infoAnimations.forEach((infoAnimation) => {
+          if (!infoAnimation.animation.completed) {
+            return;
+          }
+          infoAnimation.animation.delay = 0;
+          infoAnimation.animation.reverse();
+          infoAnimation.animation.play();
+          if (infoAnimation.element instanceof HTMLElement) {
+            infoAnimation.element.innerHTML = "";
+            setTimeout(() => {
+              removeInfoElement(infoAnimation);
+            }, BOX_ANIMATE_TIME);
+          } else {
+            infoAnimation.animation.finished.then(() => {
+              removeInfoElement(infoAnimation);
+            });
+          }
+        });
       }
+
+      if (infoAnimations.some((infoAnimation) => infoAnimation.star === starElement)) {
+        return;
+      }
+
+      removeOldInfo();
 
       const startPoint = getStarLocation();
       const { angle, endPoint } = generateInfoLocation(startPoint);
@@ -162,14 +209,18 @@
       if (!star) {
         return;
       }
-      const expandLine = displayInfoLine(startPoint, endPoint, star.color);
-      const { infoBox, expandInfoBox } = displayInfoBox(angle, endPoint, star.color); 
+      const infoLine = generateInfoLine(startPoint, star.color);
+      const { infoBox, endLeft, endTop } = generateInfoBox(angle, endPoint, star.color); 
       if (!infoBox) {
         return;
       }
+
+      const expandLine = lineAnimation(infoLine, endPoint);
+      const expandBox = infoBoxAnimation(infoBox, endLeft, endTop, star);
       expandLine.play();
-      expandInfoBox.play();
-      displayStarInfo(infoBox);
+      expandBox.play();
+      infoAnimations.push({ element: infoLine, animation: expandLine, star: starElement });
+      infoAnimations.push({ element: infoBox, animation: expandBox, star: starElement });
     };
 
     document.addEventListener("click", (event) => {
@@ -216,5 +267,25 @@
     bottom: -15px;
     z-index: -1;
     background: transparent;
+  }
+
+  .info-line {
+    stroke-width: 2px;
+  }
+
+  .info-box {
+    box-sizing: border-box;
+    padding: 3px;
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    font-size: smaller;
+
+    & h3, & p {
+      opacity: 1;
+      transition: opacity 0.3s;
+      margin: 1px;
+    }
   }
 </style>
