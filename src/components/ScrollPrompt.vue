@@ -1,21 +1,22 @@
 <template>
-  <div id="scroll-prompt">
+  <div id="scroll-prompt" ref="scrollPrompt">
     Scroll down to continue
   </div>
 </template>
 
 <script lang="ts" setup>
   const PROMPT_TIME = 8000;
-  const currentPage = ref<string>("stars");
+  const currentPage = ref("stars");
+  const scrollPrompt = useTemplateRef("scrollPrompt");
 
   onMounted(() => {
     setTimeout(() => {
-      if (currentPage.value === "stars") {
-        const clickPrompt = document.getElementById("scroll-prompt");
-        if (clickPrompt) {
-          clickPrompt.style.opacity = "0.4";
-        }
-      }
+      if (currentPage.value !== "stars") return;
+      const clickPrompt = document.getElementById("scroll-prompt");
+      if (!clickPrompt) return;
+      clickPrompt.style.opacity = "0.4";
+      if (!scrollPrompt.value) return;
+      scrollPrompt.value.style.pointerEvents = "all";
     }, PROMPT_TIME);
   });
 </script>
@@ -23,6 +24,7 @@
 <style>
 
   #scroll-prompt {
+    pointer-events: none;
     z-index: 100;
     position: absolute;
     bottom: 1em;

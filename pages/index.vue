@@ -1,14 +1,24 @@
 <template>
-  <div id="app">
-    <div class="move-cursor vignette" id="intro-container">
+  <div id="app" v-locomotive="{
+      direction: 'vertical',
+      smartphone: {
+        smooth: true,
+        direction: 'vertical',
+      },
+      tablet: {
+        smooth: true,
+        direction: 'vertical',
+      },
+    }">
+    <div class="move-cursor vignette" id="intro-container" data-scroll-section>
       <Navigator/>
       <div id="draggable-world">
         <Stars/>
       </div>
       <ScrollPrompt/>
     </div>
-    <div id="skills">
-      <h1>Jumpscare</h1>
+    <div id="skills" data-scroll-section>
+      <h1 data-scroll data-scroll-speed >Jumpscare</h1>
     </div>
   </div>
 </template>
@@ -17,28 +27,42 @@
   import Stars from "~/src/components/Stars.vue";
   import { useDragScroll } from "~/src/composables/dragScroll";
   import { useSquishyCursor } from "~/src/composables/squishyCursor";
-  import AudioManager from "../src/utils/audioManager";
   import Navigator from "~/src/components/Navigator.vue";
   import ScrollPrompt from "~/src/components/ScrollPrompt.vue";
-  const audioManager = new AudioManager()
 
   onMounted(() => {
-    audioManager.addAudio("click", "/sfx/click.wav"); 
     const container = document.getElementById("draggable-world");
-    if (container) {
-      useDragScroll(container);
-      useSquishyCursor(container);
+
+    if (!container) {
+      return;
     }
 
-    document.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
-    }, false);
+    useDragScroll(container);
+    const { expanded } = useSquishyCursor(container);
+
     document.addEventListener("touchstart", (event) => {
       event.preventDefault();
     }, { passive: false });
     document.addEventListener("touchmove", (event) => {
       event.preventDefault();
     }, { passive: false });
+
+    const addExpansionListeners = (element: Element) => {
+      element.addEventListener("mouseenter", () => {
+      expanded.value = true;
+      });
+      element.addEventListener("mouseleave", () => {
+        expanded.value = false;
+      });
+    }
+
+    const scrollbarThumb = document.querySelector(".c-scrollbar_thumb");
+    if (!scrollbarThumb) return;
+    addExpansionListeners(scrollbarThumb);
+
+    const scrollPrompt = document.getElementById("scroll-prompt");
+    if (!scrollPrompt) return;
+    addExpansionListeners(scrollPrompt);
   });
   
   useHead({
@@ -47,9 +71,6 @@
       { name: "description", content: "A personal website portfolio" }
     ]
   });
-
-  //TODO text scramble transition for hover subtitle text
-  //TODO move out animation for language text
 </script>
 
 <style lang="scss">
@@ -64,12 +85,6 @@
     height: 100%;
     user-select: none;
     caret-color: transparent;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
 
   .vignette {
@@ -81,7 +96,6 @@
   }
 
   #app {
-    scroll-behavior: smooth;
     display: flex;
     width: 100%;
     height: 200vh;
@@ -109,12 +123,24 @@
     }
   }
 
+  .c-scrollbar {
+    z-index: 999;
+  }
+
+  .c-scrollbar_thumb {
+    cursor: none;
+    background-color: #ffffff4f;
+
+    &:active {
+      cursor: none;
+    }
+  }
+
   #intro-container {
     position: relative;
     width: 100%;
     height: 100%;
     z-index: 1;
-    pointer-events: none;
   }
 
   #draggable-world {
@@ -125,7 +151,6 @@
     width: 200%;
     height: 200%;
     z-index: 1;
-    pointer-events: none;
   }
 
   #cursor {
@@ -139,10 +164,6 @@
     border-radius: 50%;
     pointer-events: none;
     mix-blend-mode: difference;
-    transition: width 0.2s, height 0.2s;
-    &.expand {
-      width: 10px;
-      height: 10px;
-    }
+    transition: scale 0.2s, width 0.2s, height 0.2s;
   }
 </style>
