@@ -1,15 +1,15 @@
 <template>
   <div id="app" v-locomotive="{
+    direction: 'vertical',
+    smartphone: {
+      smooth: true,
       direction: 'vertical',
-      smartphone: {
-        smooth: true,
-        direction: 'vertical',
-      },
-      tablet: {
-        smooth: true,
-        direction: 'vertical',
-      },
-    }">
+    },
+    tablet: {
+      smooth: true,
+      direction: 'vertical',
+    },
+  }">
     <div class="move-cursor vignette" id="intro-container" data-scroll-section>
       <Navigator/>
       <div id="draggable-world">

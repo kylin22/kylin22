@@ -21,6 +21,7 @@
 <script setup lang="ts">
   import { BackSide } from "three";
   import { OrbitControls } from "@tresjs/cientos";
+  import { TresCanvas } from "@tresjs/core";
   onMounted(() => {
     const iconContainer = document.getElementById("icon-container");
     if (iconContainer) {

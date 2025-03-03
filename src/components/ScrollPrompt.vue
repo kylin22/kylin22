@@ -1,13 +1,23 @@
 <template>
-  <div id="scroll-prompt" ref="scrollPrompt">
+  <div id="scroll-prompt" ref="scrollPrompt" @click="scrollDown">
     Scroll down to continue
   </div>
 </template>
 
 <script lang="ts" setup>
+  import { scroll } from "~/plugins/locomotive";
+
   const PROMPT_TIME = 8000;
   const currentPage = ref("stars");
   const scrollPrompt = useTemplateRef("scrollPrompt");
+
+  const scrollDown = () => {
+    if (!scrollPrompt.value) return;
+    console.log("scrolling");
+    const nextSection = document.getElementById("skills");
+    if (!nextSection) return;
+    scroll.scrollTo(nextSection);
+  };
 
   onMounted(() => {
     setTimeout(() => {
