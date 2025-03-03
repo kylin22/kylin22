@@ -26,18 +26,24 @@
   const titleContainer = ref<HTMLDivElement | null>(null);
   const ghostTextVisible = ref(false);
 
+  const hoverTextList = ["ADVOCATE FOR INTERACTIVITY", "PASSIONATE ECLECTIC", "MEDIOCRE PROGRAMMER"];
   const subtitleText = ref("STUDENT AND PROGRAMMER");
   const normalText = "STUDENT AND PROGRAMMER";
-  const hoverText = "ADVOCATE FOR INTERACTIVITY";
   let shufflingInterval: null | NodeJS.Timeout = null;
   let shufflingStop: null | NodeJS.Timeout = null;
+  let currentHoverText = "";
 
   const mouseOver = () => {
     ghostTextVisible.value = true;
-    shuffleText(hoverText);
+    if (!currentHoverText) {
+      const randomHoverText = hoverTextList[Math.floor(Math.random() * hoverTextList.length)]
+      shuffleText(randomHoverText);
+      currentHoverText = randomHoverText;
+    }
   };
 
   const mouseLeave = () => {
+    currentHoverText = "";
     ghostTextVisible.value = false;
     shuffleText(normalText);
   };

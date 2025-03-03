@@ -17,9 +17,7 @@
       </div>
       <ScrollPrompt/>
     </div>
-    <div id="skills" data-scroll-section>
-      <h1 data-scroll data-scroll-speed >Jumpscare</h1>
-    </div>
+    <Showcase/>
   </div>
 </template>
 
@@ -29,6 +27,7 @@
   import { useSquishyCursor } from "~/src/composables/squishyCursor";
   import Navigator from "~/src/components/Navigator.vue";
   import ScrollPrompt from "~/src/components/ScrollPrompt.vue";
+  import Showcase from "~/src/components/Showcase.vue";
 
   onMounted(() => {
     const container = document.getElementById("draggable-world");
@@ -100,27 +99,6 @@
     width: 100%;
     height: 200vh;
     flex-direction: column;
-  }
-
-  #skills {
-    position: relative;
-    font-family: monospace;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
-    background-color: $primary-color;
-    color: $background-color;
-
-    & h1 {
-      position: absolute;
-      width: 100%;
-      margin: 0px;
-      font-size: 10em;
-      text-align: center;
-      top: 50%;
-      transform: translateY(-50%);
-    }
   }
 
   .c-scrollbar {

@@ -13,8 +13,7 @@
 
   const scrollDown = () => {
     if (!scrollPrompt.value) return;
-    console.log("scrolling");
-    const nextSection = document.getElementById("skills");
+    const nextSection = document.getElementById("showcase");
     if (!nextSection) return;
     scroll.scrollTo(nextSection);
   };
