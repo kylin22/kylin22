@@ -9,7 +9,7 @@
 
   const PROMPT_TIME = 8000;
   const currentPage = ref("stars");
-  const scrollPrompt = useTemplateRef("scrollPrompt");
+  const scrollPrompt = ref<HTMLElement | null>(null);
 
   const scrollDown = () => {
     if (!scrollPrompt.value) return;

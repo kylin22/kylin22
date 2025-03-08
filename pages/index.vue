@@ -10,7 +10,7 @@
       direction: 'vertical',
     },
   }">
-    <div class="move-cursor vignette" id="intro-container" data-scroll-section>
+    <div class="move-cursor vignette" id="intro-container">
       <Navigator/>
       <div id="draggable-world">
         <Stars/>

@@ -30,13 +30,13 @@ export default defineNuxtPlugin({
 export { scroll };
 
 declare global {
-    interface HTMLElement {
-        locomotive?: LocomotiveScroll
-    }
+  interface HTMLElement {
+    locomotive?: LocomotiveScroll
+  }
 }
 
 declare module '@vue/runtime-core' {
-    interface GlobalDirective {
-        locomotive: Directive<HTMLElement, InstanceOptions>
-    }
+  interface GlobalDirective {
+    locomotive: Directive<HTMLElement, InstanceOptions>
+  }
 }

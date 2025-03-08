@@ -26,7 +26,7 @@
   const titleContainer = ref<HTMLDivElement | null>(null);
   const ghostTextVisible = ref(false);
 
-  const hoverTextList = ["ADVOCATE FOR INTERACTIVITY", "PASSIONATE ECLECTIC", "MEDIOCRE PROGRAMMER"];
+  const hoverTextList = ["ADVOCATE FOR INTERACTIVITY", "PASSIONATE ECLECTIC", "MEDIOCRE CODER"];
   const subtitleText = ref("STUDENT AND PROGRAMMER");
   const normalText = "STUDENT AND PROGRAMMER";
   let shufflingInterval: null | NodeJS.Timeout = null;

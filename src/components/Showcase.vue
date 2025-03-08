@@ -1,5 +1,5 @@
 <template>
-  <div id="cover" data-scroll-section>
+  <div id="showcase" data-scroll-section>
     <h1>Skills</h1>
   </div>
 </template>
@@ -11,7 +11,7 @@
 <style lang="scss" scoped>
   @import "~/src/assets/theme.scss";
 
-  #cover {
+  #showcase {
     position: relative;
     font-family: monospace;
     width: 100%;
